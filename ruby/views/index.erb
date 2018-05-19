@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plaid Walkthrough Example</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div id="container">
+    </div>
+
+    <div id="app">
+        <div class="box">
+            <button id="get-transactions-btn">Get Transactions</button>
+            <button id="filter-transactions-btn">Show Recurring Charges</button>
+            <div id="get-transactions-data"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+    <script>
+    (function($) {
+        var handler = Plaid.create({
+            apiVersion: 'v2',
+            clientName: 'Plaid Walkthrough Demo',
+            env: 'sandbox',
+            product: ['transactions'],
+            key: '<%= ENV["PLAID_PUBLIC_KEY"] %>',
+            onSuccess: function(public_token) {
+                $.post('/get_access_token', {public_token: public_token}, function() {
+                    $('#container').fadeOut('fast', function() {
+                        $('#intro').hide();
+                        $('#app, #steps').fadeIn('slow');
+                    });
+                });
+            },
+        });
+        handler.open();
+    $('#get-transactions-btn').on('click', function(e) {
+      $.get('/transactions', function(data) {
+        console.log(data)
+        if (data.error != null) {
+          // Format the error
+          var errorHtml = '<div class="inner"><p>' +
+           '<strong>' + data.error.error_code + ':</strong> ' +
+           data.error.error_message + '</p></div>';
+
+          if (data.error.error_code === 'PRODUCT_NOT_READY') {
+            // Add additional context for `PRODUCT_NOT_READY` errors
+            errorHtml += '<div class="inner"><p>The PRODUCT_NOT_READY ' +
+             'error is returned when a request to retrieve Transaction data ' +
+             'is made before Plaid finishes the <a href="https://plaid.com/' +
+             'docs/quickstart/#transaction-data-with-webhooks">initial ' +
+             'transaction pull.</a></p></div>';
+          }
+          // Render the error
+          $('#get-transactions-data').slideUp(function() {
+            $(this).slideUp(function() {
+              $(this).html(errorHtml).slideDown();
+            });
+          });
+        } else {
+          $('#get-transactions-data').slideUp(function() {
+            var html = '';
+            data.transactions.forEach(function(txn, idx) {
+              html += '<div class="inner">';
+              html += '<strong>' + txn.name + '</strong><br>';
+              html += '$' + txn.amount;
+              html += '<br><em>' + txn.date + '</em>';
+              html += '</div>';
+            });
+
+            $(this).slideUp(function() {
+              $(this).html(html).slideDown();
+            });
+          });
+        }
+      });
+    });
+    $('#filter-transactions-btn').on('click', function(e) {
+      $.get('/filteredTransactions', function(data) {
+        console.log(data)
+        if (data.error != null) {
+          // Format the error
+          var errorHtml = '<div class="inner"><p>' +
+           '<strong>' + data.error.error_code + ':</strong> ' +
+           data.error.error_message + '</p></div>';
+
+          if (data.error.error_code === 'PRODUCT_NOT_READY') {
+            // Add additional context for `PRODUCT_NOT_READY` errors
+            errorHtml += '<div class="inner"><p>The PRODUCT_NOT_READY ' +
+             'error is returned when a request to retrieve Transaction data ' +
+             'is made before Plaid finishes the <a href="https://plaid.com/' +
+             'docs/quickstart/#transaction-data-with-webhooks">initial ' +
+             'transaction pull.</a></p></div>';
+          }
+          // Render the error
+          $('#get-transactions-data').slideUp(function() {
+            $(this).slideUp(function() {
+              $(this).html(errorHtml).slideDown();
+            });
+          });
+        } else {
+          $('#get-transactions-data').slideUp(function() {
+            var html = '';
+            data.forEach(function(item, idx) {
+              html += '<div class="inner">';
+              html += '<strong>' + item.name + '</strong><br>';
+              html += '$' + item.amount;
+              html += '<br><em>' + item.date + '</em>';
+              html += '</div>';
+            });
+
+            $(this).slideUp(function() {
+              $(this).html(html).slideDown();
+            });
+          });
+        }
+      });
+
+    });
+    })(jQuery);
+    </script>
+</body>
+</html>
