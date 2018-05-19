@@ -64,11 +64,25 @@
         } else {
           $('#get-transactions-data').slideUp(function() {
             var html = '';
-            data.transactions.forEach(function(txn, idx) {
+            data.forEach(function(item, idx) {
               html += '<div class="inner">';
-              html += '<strong>' + txn.name + '</strong><br>';
-              html += '$' + txn.amount;
-              html += '<br><em>' + txn.date + '</em>';
+              html += '<div class="summary">';
+              html += '<strong>' + item.name + '</strong><br>';
+              html += '$' + item.amount;
+              html += '<br><em>' + item.date + '</em>';
+              html += '</div>';
+              if (item.clearbit[0]) {
+                html += '<div class="clear">';
+                html += '<h1 class="details">Company Details: </h1>';
+                html += '<strong>' + item.clearbit[0].name + '</strong><br>';
+                html += '<a>' + item.clearbit[0].domain + '</a><br>';
+                html += '<img width="20px" height="20px" src=' + item.clearbit[0].logo + '></img><br>';
+                html += '</div>';
+              } else {
+                html += '<div class="clear">';
+                html += '<h1>Company Details Not Available</h1>';
+                html += '</div>';
+              }
               html += '</div>';
             });
 
@@ -107,9 +121,23 @@
             var html = '';
             data.forEach(function(item, idx) {
               html += '<div class="inner">';
+              html += '<div class="summary">';
               html += '<strong>' + item.name + '</strong><br>';
               html += '$' + item.amount;
               html += '<br><em>' + item.date + '</em>';
+              html += '</div>';
+              if (item.clearbit[0]) {
+                html += '<div class="clear">';
+                html += '<h1>Company Details</h1>';
+                html += '<strong>' + item.clearbit[0].name + '</strong><br>';
+                html += '<a>' + item.clearbit[0].domain + '</a><br>';
+                html += '<img class="img" width="20px" height="20px" src=' + item.clearbit[0].logo + '></img><br>';
+                html += '</div>';
+              } else {
+                html += '<div class="clear">';
+                html += '<h1>Company Details Not Available</h1>';
+                html += '</div>';
+              }
               html += '</div>';
             });
 

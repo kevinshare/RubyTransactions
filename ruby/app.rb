@@ -1,6 +1,10 @@
 require 'date'
 require 'sinatra'
 require 'plaid'
+require 'clearbit'
+require 'HTTParty'
+require 'pry'
+
 
 set :public_folder, File.dirname(__FILE__) + '/public'
 
@@ -10,6 +14,8 @@ client = Plaid::Client.new(env: :sandbox,
                            public_key: ENV['PLAID_PUBLIC_KEY'])
 
 access_token = nil
+
+auth = {:username => "sk_86fd797eed6384b127065087af179f05", :password => ""} 
 
 get '/' do
   erb :index
@@ -40,13 +46,21 @@ end
 get '/transactions' do
   now = Date.today
   thirty_days_ago = (now - 30)
+  results = []
   begin
     transactions_response = client.transactions.get(access_token, thirty_days_ago, now)
   rescue Plaid::ItemError => e
     transactions_response = { error: {error_code: e.error_code, error_message: e.error_message}}
   end
+  transactions_response.transactions.each do |item| 
+    name = item.name
+    clearbit_response = HTTParty.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{name}/", :basic_auth => auth, format: :plain)
+    bitAdded = item.to_h.merge(clearbit: JSON.parse(clearbit_response))
+    stringifiedItem = bitAdded.inject({}){|memo,(k,v)| memo[k.to_s] = v; memo}
+    results.push(stringifiedItem)
+  end
   content_type :json
-  transactions_response.to_json
+  results.to_json
 end
 
 get '/filteredTransactions' do
@@ -58,13 +72,17 @@ get '/filteredTransactions' do
   rescue Plaid::ItemError => e
     transactions_response = { error: {error_code: e.error_code, error_message: e.error_message}}
   end
-  transactions_response.transactions.each do |item|
+  transactions = transactions_response.transactions
+  transactions.each do |item, i|
     valueToCheck = item.name.split
-    transactions_response.transactions.each do |comparison|
+    otherValues = transactions.values_at(0..1, 2...5)
+    otherValues.each do |comparison|
       if comparison.name.include? valueToCheck[0]
-        if(!filtered_transactions.include? valueToCheck[0])
-          filtered_transactions.push(item)
-        end
+        name = item.name
+        clearbit_response = HTTParty.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=#{name}/", :basic_auth => auth, format: :plain)
+        bitAdded = item.to_h.merge(clearbit: JSON.parse(clearbit_response))
+        stringifiedItem = bitAdded.inject({}){|memo,(k,v)| memo[k.to_s] = v; memo}
+        filtered_transactions.push(stringifiedItem)
       end
     end
   end

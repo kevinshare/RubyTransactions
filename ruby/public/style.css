@@ -38,14 +38,26 @@ button {
     font-size: 18px;
     border-radius: 4px;
 }
+#get-transactions-btn {
+    display: flex;
+    align-self: center;
+    padding-bottom: 10px;
+}
+#filter-transactions-btn {
+    display: flex;
+    align-self: center;
+    padding-bottom: 10px;
+}
 button:hover { color: #f1f1f1; cursor: pointer; }
 
 #app { display: none; }
 #app textarea { display: none; height: 100px; width: 260px; padding: 10px; font-size: 14px; }
-.box { margin: 20px auto 0; }
-.inner { background: #f3f3f3; font-size: 14px; line-height: 17px; padding: 20px; border-radius: 2px; margin-top: 20px; }
+.box { margin: 20px auto 0;}
+.inner { display: flex; justify-content: center; background: #f3f3f3; font-size: 14px; line-height: 17px; padding: 20px; border-radius: 2px; margin-top: 20px; }
 #banner { border-top: 0px; margin-top: 0px; border-radius: 0 0 2px 2px; }
 #banner h1 { color: #1a476a; font-size: 18px; font-weight: bold; }
 #banner p { font-size: 14px; line-height: 17px; margin-top: 5px; }
 #steps { display: none; }
 .green { background: #3ab683; color: #fff; }
+.clear {float: right; max-height: 80px; max-width: 200px; margin-left: 200px; position: relative;}
+.summary {float: left; margin-right: 50px; position: relative;}
