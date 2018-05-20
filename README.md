@@ -1,5 +1,7 @@
 # RubyTransactions
 
+-This app was created by using Plaids sandbox mode and authentication to retrieve sample bank transactions. The code was altered and optimized to filter data and connect with the Clearbit AutoComplete API.
+
 # 1. Clone Repo
 
 # 2. In Command Line:
