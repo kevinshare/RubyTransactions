@@ -38,14 +38,17 @@ button {
     font-size: 18px;
     border-radius: 4px;
 }
-#get-transactions-btn {
+.buttonWrap1 {
     display: flex;
     align-self: center;
     padding-bottom: 10px;
+    max-width: 200px;
 }
-#filter-transactions-btn {
+.buttonWrap2 {
     display: flex;
-    align-self: center;
+    float: right;
+    max-width: 300px;
+    margin-top: -51px;
     padding-bottom: 10px;
 }
 button:hover { color: #f1f1f1; cursor: pointer; }
@@ -59,5 +62,7 @@ button:hover { color: #f1f1f1; cursor: pointer; }
 #banner p { font-size: 14px; line-height: 17px; margin-top: 5px; }
 #steps { display: none; }
 .green { background: #3ab683; color: #fff; }
-.clear {float: right; max-height: 80px; max-width: 200px; margin-left: 200px; position: relative;}
-.summary {float: left; margin-right: 50px; position: relative;}
+.clear {float: right; min-height: 80px; max-width: 110px; margin-left: 200px; position: relative;}
+.summary {display: flex; flex: 1; float: left; margin-right: 100px; max-width: 200px; position: relative;}
+.summaryCost {display: flex; align-items: center}
+.em {margin-top: 40px; margin-left: -50px;}

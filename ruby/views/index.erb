@@ -12,8 +12,12 @@
 
     <div id="app">
         <div class="box">
-            <button id="get-transactions-btn">Get Transactions</button>
-            <button id="filter-transactions-btn">Show Recurring Charges</button>
+            <div class="buttonWrap1">
+              <button id="get-transactions-btn">Get Transactions</button>
+            </div>  
+            <div class="buttonWrap2">
+              <button id="filter-transactions-btn">Show Recurring Charges</button>
+            </div>
             <div id="get-transactions-data"></div>
         </div>
     </div>
@@ -67,15 +71,17 @@
             data.forEach(function(item, idx) {
               html += '<div class="inner">';
               html += '<div class="summary">';
-              html += '<strong>' + item.name + '</strong><br>';
+              html += '<strong>' + item.name + '</strong>';
+              html += '</div>';
+              html += '<div class="summaryCost">';
               html += '$' + item.amount;
-              html += '<br><em>' + item.date + '</em>';
+              html += '<br><br><em class="em">' + item.date + '</em>';
               html += '</div>';
               if (item.clearbit[0]) {
                 html += '<div class="clear">';
                 html += '<h1 class="details">Company Details: </h1>';
                 html += '<strong>' + item.clearbit[0].name + '</strong><br>';
-                html += '<a>' + item.clearbit[0].domain + '</a><br>';
+                html += '<a href=' + item.clearbit[0].domain + '>' + item.clearbit[0].domain + '</a><br>';
                 html += '<img width="20px" height="20px" src=' + item.clearbit[0].logo + '></img><br>';
                 html += '</div>';
               } else {
@@ -122,15 +128,17 @@
             data.forEach(function(item, idx) {
               html += '<div class="inner">';
               html += '<div class="summary">';
-              html += '<strong>' + item.name + '</strong><br>';
+              html += '<strong>' + item.name + '</strong>';
+              html += '</div>';
+              html += '<div class="summaryCost">';
               html += '$' + item.amount;
-              html += '<br><em>' + item.date + '</em>';
+              html += '<br><br><em class="em">' + item.date + '</em>';
               html += '</div>';
               if (item.clearbit[0]) {
                 html += '<div class="clear">';
-                html += '<h1>Company Details</h1>';
+                html += '<h1>Company Details: </h1>';
                 html += '<strong>' + item.clearbit[0].name + '</strong><br>';
-                html += '<a>' + item.clearbit[0].domain + '</a><br>';
+                html += '<a href=' + item.clearbit[0].domain + '>' + item.clearbit[0].domain + '</a><br>';
                 html += '<img class="img" width="20px" height="20px" src=' + item.clearbit[0].logo + '></img><br>';
                 html += '</div>';
               } else {

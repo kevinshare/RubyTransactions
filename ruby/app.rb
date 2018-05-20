@@ -45,7 +45,7 @@ end
 
 get '/transactions' do
   now = Date.today
-  thirty_days_ago = (now - 30)
+  thirty_days_ago = (now - 50)
   results = []
   begin
     transactions_response = client.transactions.get(access_token, thirty_days_ago, now)
@@ -65,7 +65,7 @@ end
 
 get '/filteredTransactions' do
   now = Date.today
-  thirty_days_ago = (now - 30)
+  thirty_days_ago = (now - 50)
   filtered_transactions = []
   begin
     transactions_response = client.transactions.get(access_token, thirty_days_ago, now)
@@ -73,9 +73,9 @@ get '/filteredTransactions' do
     transactions_response = { error: {error_code: e.error_code, error_message: e.error_message}}
   end
   transactions = transactions_response.transactions
-  transactions.each do |item, i|
+  transactions.each_with_index do |item, i|
     valueToCheck = item.name.split
-    otherValues = transactions.values_at(0..1, 2...5)
+    otherValues = transactions.values_at(0..(i - 1), (i + 1)...transactions.length)
     otherValues.each do |comparison|
       if comparison.name.include? valueToCheck[0]
         name = item.name
