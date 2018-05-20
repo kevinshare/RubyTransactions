@@ -1,3 +1,4 @@
+ENV['KEY'] = 'KEY'
 require 'date'
 require 'sinatra'
 require 'plaid'
@@ -15,32 +16,20 @@ client = Plaid::Client.new(env: :sandbox,
 
 access_token = nil
 
-auth = {:username => "sk_86fd797eed6384b127065087af179f05", :password => ""} 
+auth = {:username => "KEY", :password => ""} 
 
 get '/' do
   erb :index
 end
 
 post '/get_access_token' do
+  puts params['public_token']
   exchange_token_response = client.item.public_token.exchange(params['public_token'])
   access_token = exchange_token_response['access_token']
   item_id = exchange_token_response['item_id']
   puts "access token: #{access_token}"
   puts "item id: #{item_id}"
   exchange_token_response.to_json
-end
-
-get '/accounts' do
-  auth_response = client.auth.get(access_token)
-  content_type :json
-  auth_response.to_json
-end
-
-get '/item' do
-  item_response = client.item.get(access_token)
-  institution_response = client.institutions.get_by_id(item_response['item']['institution_id'])
-  content_type :json
-  { item: item_response['item'], institution: institution_response['institution'] }.to_json
 end
 
 get '/transactions' do
